@@ -22,15 +22,15 @@ import os
 from datetime import datetime
 
 # Checking if Python is 2.7
-if not sys.version_info[:2] == (2, 7):
-    print "You need Python 2.7 for this script to run."
-    raise SystemExit
+#if not sys.version_info[:2] == (2, 7):
+#    print "You need Python 2.7 for this script to run."
+#    raise SystemExit
 
 # Checking if we have numpy
 try:
     import numpy
 except:
-    print "Please Install Numpy"
+    print("Please Install Numpy")
     raise SystemExit
 
 # Checking if we have argparse (which is default in 2.7 so this is
@@ -38,7 +38,7 @@ except:
 try:
     import argparse
 except:
-    print "Argparse Not Available?! You sure this is Python 2.7?"
+    print("Argparse Not Available?! You sure this is Python 2.7?")
     raise SystemExit
 
 
@@ -103,8 +103,8 @@ class WWZ(object):
         # Just a routine check for parameter number equality
         # This should be cleaned up a bit
         if len(time) != len(magnitude):
-            print "Number of Time and Magnitude input do not match. \
-                  Please check the input file."
+            print("Number of Time and Magnitude input do not match. \
+                  Please check the input file.")
             raise SystemExit
 
         # Return two arrays
@@ -252,7 +252,7 @@ class WWZ(object):
 
         dave = numpy.mean(magnitude)
         dvar = numpy.var(magnitude)
-        
+
         freq = self.makefreq(flo, fhi, df)
         nfreq = len(freq)
         dmat = numpy.zeros(shape=(3,3))
@@ -326,7 +326,7 @@ class WWZ(object):
             dmcon = 0.0
             dmneff = 0.0
             dmz = -1.0 # less than the smallest WWZ
-            
+
             for ifreq in range(ifreq1, ifreq2):
                 dfre = freq[ifreq]
                 domega = dfre * twopi
@@ -386,12 +386,12 @@ class WWZ(object):
                         for n2 in range(1, ndim + 1 ):
                             dmat[n1][n2] = dmat[n1][n2] / \
                                                 dmat[0][0]
-                
+
                     if (dmat[0][0] > 0.005):
                         dvarw = dvarw / dmat[0][0]
                     else:
                         dvarw = 0.0
-                    
+
 
                     dmat[0][0] = 1.0
                     davew = dvec[0]
@@ -450,7 +450,7 @@ class WWZ(object):
                     dmcon = dcoef[0]
                     dmneff = dneff
 
-        return output  
+        return output
 
 
     def writefile(self, wwz_output, outputFile, no_headers, max_periods):
@@ -595,8 +595,8 @@ class WWZPAR(object):
 
         self.inputfile.close()
         if len(self.time) != len(self.magnitude):
-            print "Number of Time and Magnitude input do not match. \
-                   Please check the input file."
+            print("Number of Time and Magnitude input do not match. \
+                   Please check the input file.")
             raise SystemExit
             # Just a routine check for parameter number equality.
             # This should be cleaned up a bit.
@@ -671,7 +671,7 @@ class WWZPAR(object):
         """The Maketau section"""
         # Lines 90 - 122 Fortran
 
-        dtaulo = self.time[0] # the java translation uses 1 for this, 
+        dtaulo = self.time[0] # the java translation uses 1 for this,
         # but that should be a bug.
         dtauhi = self.time[-1]
 
@@ -705,7 +705,7 @@ class WWZPAR(object):
 
     def wwt(self, output1_par, itau1_par, itau2_par):
         """The WWZ Algorithm in Parallel Mode"""
-        
+
         output1 = open(output1_par, "w")
         max_periods = self.max_periods
         gnuplot_compatible = self.gnuplot_compatible
@@ -901,7 +901,7 @@ class WWZPAR(object):
                 # writes the max_periods output if specified
                 output2.write("%f \t %f \t %f \t %f \t %f \t %f\n" % \
                              (dtau, dmfre, dmz,  dmamp, dmcon, dmneff))
-            
+
             if gnuplot_compatible == True:
                 # added so that gnuplot reads out of the box
                 output1.write("\n")
@@ -1010,7 +1010,7 @@ if __name__ == '__main__':
         try:
             import multiprocessing
         except (ImportError, NotImplementedError):
-            print "Multiprocessing not available, using single CPU thread."
+            print("Multiprocessing not available, using single CPU thread.")
             cpu = 1
 
     if cpu == 0:
@@ -1019,10 +1019,10 @@ if __name__ == '__main__':
             import multiprocessing
             cpu = multiprocessing.cpu_count()
         except (ImportError, NotImplementedError):
-            print "Multiprocessing not available, using single CPU thread."
+            print("Multiprocessing not available, using single CPU thread.")
             cpu = 1
 
-    # Multiprocessing begins        
+    # Multiprocessing begins
     if cpu != 1:
 
         s=WWZPAR(args.file, args.output, args.freq_low, args.freq_high, \
@@ -1119,4 +1119,4 @@ if __name__ == '__main__':
    # Print calculated time
     if args.time:
         endtime = datetime.now()
-        print "Run Time: %s seconds" % str((endtime - starttime).seconds)
+        print("Run Time: %s seconds" % str((endtime - starttime).seconds))

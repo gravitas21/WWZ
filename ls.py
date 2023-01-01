@@ -17,13 +17,13 @@ import sys
 try:
     import numpy as np
 except:
-    print "Please Install Numpy"
+    print("Please Install Numpy")
     raise SystemExit
 
 try:
     import scipy as sp
 except:
-    print "Please Install SciPy"
+    print("Please Install SciPy")
     raise SystemExit
 
 try:
@@ -142,9 +142,9 @@ if __name__ == '__main__':
 
     if args.stdout:
         if not args.no_headers:
-            print "# Frequency \t LS-Power"
+            print("# Frequency \t LS-Power")
         for i in s.periodogram:
-            print "%.5f %.5f "% (i[0], i[1])
+            print("%.5f %.5f "% (i[0], i[1]))
 
     if args.output is not None:
         if not args.no_headers:

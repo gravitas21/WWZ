@@ -252,16 +252,19 @@ class WWZ(object):
 
         dave = numpy.mean(magnitude)
         dvar = numpy.var(magnitude)
-
+        #print("Count rates: Mean {} Variance {}".format(dave,dvar))
+        
         freq = self.makefreq(flo, fhi, df)
         nfreq = len(freq)
+        #print("{} Frequencies {}".format(nfreq,freq))
         dmat = numpy.zeros(shape=(3,3))
 
         ### End of Initializing
 
         tau = self.maketau(time, timedivisions)
         ntau = len(tau)
-
+        #print("{} Time divisions {}".format(ntau,tau))
+        
         ### WWT Stars Here
 
         dvec = [0,0,0] # length is 3
@@ -318,6 +321,7 @@ class WWZ(object):
 
         # Use for itau in range(itau1,itau2) for parallel
         for itau in range(0, itau2):
+            print("working on itau {}/{}".format(itau,itau2))
             nstart = 1
             dtau = tau[itau]
 
@@ -465,7 +469,7 @@ class WWZ(object):
 
         numpy.set_printoptions(precision=5)
         numpy.set_printoptions(suppress=True)
-        numpy.set_printoptions(threshold='nan')
+        numpy.set_printoptions(threshold=numpy.inf, linewidth=numpy.nan)
 
         if no_headers:
             numpy.savetxt(outputFile, wwz_output, delimiter="\t", \
@@ -473,7 +477,7 @@ class WWZ(object):
         else:
             numpy.savetxt(outputFile, wwz_output, delimiter="\t", \
                         fmt="%10.4f", comments="#", \
-                        header="%9s %10s %10s %10s %10s %10s" % \
+                        header="%9s\t%10s\t%10s\t%10s\t%10s\t%10s" % \
                         ("TAU", "FREQ", "WWZ", "AMP", "COEF", "NEFF"))
 
     def writegnu(self, wwz_output, outputFile, no_headers, \
@@ -494,7 +498,7 @@ class WWZ(object):
 
         numpy.set_printoptions(precision=5)
         numpy.set_printoptions(suppress=True)
-        numpy.set_printoptions(threshold='nan')
+        numpy.set_printoptions(threshold=numpy.inf)
 
         splitArray = numpy.vsplit(wwz_output, ntau)
 
@@ -1098,13 +1102,17 @@ if __name__ == '__main__':
         s=WWZ()
 
         time_data, magnitude_data = s.readfile(args.file)
+        print("Read data",time_data[0:5],magnitude_data[0:5])
         wwz_output = s.wwt(time_data, magnitude_data, args.freq_low, \
                            args.freq_high, args.freq_step, args.dcon, \
                            args.time_divisions)
+        print("Completed wavelet analysis")
         if args.gnuplot_compatible:
             send_ntau = len(wwz_output) / \
                   int(((args.freq_high - args.freq_low) / args.freq_step) + 1)
-
+            print("NTAU",send_ntau,len(wwz_output))
+            send_ntau = int(send_ntau)
+            
             s.writegnu(wwz_output, args.output, args.no_headers, \
                        args.max_periods, send_ntau)
         else:
